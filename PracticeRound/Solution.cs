@@ -3,47 +3,48 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 
-namespace PizzaProblem
+namespace PracticeRound
 {
     public class Solution
     {
+        // Variables
+        private List<Pizza> pizzas = new List<Pizza>();
         public readonly int desiredSlices;
         public int diference { get { return desiredSlices - slices; } private set { } }
-        private List<Pizza> pizzas = new List<Pizza>();
-        
-        public string pizzasString {
+        public int qttyOfPizzas { get { return pizzas.Count; } }
+        public int slices { get ; private set; }
+        public string pizzasIdString {
             get {             
                 List<Pizza> sortedList = GetSortedPizzaList();
                 return sortedList.Aggregate("", (current, pizza) => current + (pizza.pizzaNumber + " "));
             }
         }
-        public int qttyOfPizzas
-        {
-            get { return pizzas.Count; }
-        }
-        public int slices { get ; private set; }
 
+        
+        
+        //Constructor
         public Solution(List<Pizza> pizzas, int desiredSlices)
         {
             this.pizzas = new List<Pizza>(pizzas);
             this.desiredSlices = desiredSlices;
-            slices = GetNumberOfSlices();
+            CalculateNumberOfSlices();
         }
-
-        public int GetNumberOfSlices()
+        private void CalculateNumberOfSlices()
         {
             if (pizzas == null)
-                return 0;
+                slices = 0;
 
             int count = 0;
             foreach (Pizza pizza in pizzas)
                 count += pizza.pizzaSize;
-            return count;
+            slices = count;
         }
 
+        
+        // Public methods
         public override string ToString()
         {
-            return "Slices: " + slices.ToString();
+            return "Solution error = " + diference;
         }
 
         public bool AddPizza(Pizza pizza)
@@ -52,7 +53,7 @@ namespace PizzaProblem
                 return false;
             
             pizzas.Add(pizza);
-            slices = GetNumberOfSlices();
+            CalculateNumberOfSlices();
             return true;
         }
         
@@ -62,27 +63,27 @@ namespace PizzaProblem
                 return false;
             
             bool ret = pizzas.Remove(pizza);
-            slices = GetNumberOfSlices();
+            CalculateNumberOfSlices();
             return ret;
         }
 
 
-        public Solution GetMutation(List<Pizza> possiblePizzasToAdd)
+        /*public Solution GetMutation(List<Pizza> possiblePizzasToAdd)
         {
             List<Pizza> newPizzaList = new List<Pizza>(pizzas);
             Solution newSolution = new Solution(newPizzaList, desiredSlices);
 
-            int pizzasToRemove = Program.rnd.Next(pizzas.Count+1);
+            int pizzasToRemove = Solver.rnd.Next(pizzas.Count+1);
             //Console.WriteLine("MUTATION removing " + pizzasToRemove + " pizzas. ");
             List<Pizza> removedPizzas = new List<Pizza>();
             for (int i = 0; i < pizzasToRemove; i++)
             {
-                removedPizzas.Add(newSolution.pizzas.ElementAt(Program.rnd.Next(0, newSolution.pizzas.Count)));
+                removedPizzas.Add(newSolution.pizzas.ElementAt(Solver.rnd.Next(0, newSolution.pizzas.Count)));
                 newSolution.pizzas.Remove(removedPizzas.ElementAt(removedPizzas.Count-1));
             }
 
             return Program.GetSolution0(desiredSlices, Program.pizzasInProblem, newSolution.pizzas, removedPizzas);
-        }
+        }*/
 
         public bool Contains(Pizza pizza)
         {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace PizzaProblem
+namespace PracticeRound
 {
     public class Pizza
     {
