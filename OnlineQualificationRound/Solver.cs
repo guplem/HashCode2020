@@ -12,15 +12,20 @@ namespace OnlineQualificationRound
             // Sort libraries sorted in descending order by potential punctuation.
             List<Library> librariesSortedByPriority = new List<Library>();
             
-            Console.Write("Remaining libraries to sort: ");
+
             while (allLibraries.Count > 0)
             {
-                Console.Write(allLibraries.Count + ", ");
+                if (allLibraries.Count%1000==0)
+                    Console.WriteLine("    Remaining libraries to sort: " + allLibraries.Count);
+                
                 Library topLibrary = null;
                 
                 foreach (Library library in allLibraries)
+                {
                     if (topLibrary == null || library.potentialScore > topLibrary.potentialScore)
                         topLibrary = library;
+                }
+
 
                 if (topLibrary != null)
                 {
@@ -32,7 +37,7 @@ namespace OnlineQualificationRound
             
             //Build up the solution
             Solution solution = new Solution();
-            foreach (Library library in allLibraries)
+            foreach (Library library in librariesSortedByPriority)
                 solution.AddLibrary(library, library.books);
 
             return solution;

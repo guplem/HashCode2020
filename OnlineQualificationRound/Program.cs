@@ -20,10 +20,11 @@ namespace OnlineQualificationRound
             int totalLibrariesNumber = Int32.Parse(fileLines[0].Split(' ')[1]);
             
             int totalDaysAvailable = Int32.Parse(fileLines[0].Split(' ')[2]);
+            Console.WriteLine("Storing books... ");
             Book[] allBooks = GetBookssFromStringLine(fileLines[1], totalBooksNumber);
-            Console.WriteLine("Books stored.");
+            Console.WriteLine("Storing libraries... ");
             Library[] allLibraries = GetLibrariesFromLines(fileLines.Skip(2).ToArray(), allBooks, totalLibrariesNumber, totalDaysAvailable);
-            Console.WriteLine("Libraries stored.");
+            
 
             
             
@@ -62,7 +63,6 @@ namespace OnlineQualificationRound
             
             for (int l = 0; l < linesWithLibrariesInfo.Length; l++)
             {
-
                 if (string.IsNullOrEmpty(linesWithLibrariesInfo[l]))
                     break;
                 
@@ -74,9 +74,10 @@ namespace OnlineQualificationRound
                 else { // Second line
                     int[] booksId = Array.ConvertAll(linesWithLibrariesInfo[l].Split(' '), s => int.Parse(s));
                     foreach (int bookId in booksId)
-                        foreach (var book in allBooks)
-                            if (book.id == bookId)
-                                booksInLibrary.Add(book);
+                            if (allBooks[bookId].id == bookId)
+                                booksInLibrary.Add(allBooks[bookId]);
+                            else 
+                                throw new Exception("The books array is not sorted by the book id.");
                     
                     if (numberOfBooks != booksInLibrary.Count)
                         throw new Exception("The number of books read was not the same as the number of books informed as being part of the library. Read " + booksInLibrary.Count + ", expected " + numberOfBooks);
@@ -99,7 +100,7 @@ namespace OnlineQualificationRound
         
         private static void SaveSolution(Solution solution, string problemName, int totalDaysAvaliable)
         {
-            Console.WriteLine("Saving solution.");
+            Console.WriteLine("Saving solution...");
             
             List<string> lines = new List<string>();
                 
@@ -113,7 +114,10 @@ namespace OnlineQualificationRound
             
             try {
                 System.IO.File.WriteAllLines("Solution to " + problemName +  " - Score " + solution.GetScore(totalDaysAvaliable) + ".txt", lines.ToArray());
+                Console.WriteLine("Solution saved.\n \n");
             } catch (IOException e) { Console.WriteLine(e);  }
+            
+            
         }
         
     }

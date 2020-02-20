@@ -28,19 +28,22 @@ namespace OnlineQualificationRound
         private int CalculatePotentialScore()
         {
             int totalScore = 0;
-                
-                int bookCounter = 0;
-                for (int d = 0; d < daysAvaliableInProblem - signUpTime; d++)
-                    for (int b = 0; b < scannedBooksPerDay; b++)
-                    {
-                        try
-                        {
-                            totalScore += books.ElementAt(bookCounter).score;
-                            bookCounter++;
-                        } catch (ArgumentOutOfRangeException) { }
-                    }
+            int availableDays = daysAvaliableInProblem - signUpTime;
+            int bookCounter = 0;
+            for (int d = 0; d < availableDays; d++)
+            {
+                for (int b = 0; b < scannedBooksPerDay; b++)
+                {
+                    totalScore += books.ElementAt(bookCounter).score;
+                    bookCounter++;
+                    
+                    if (bookCounter >= books.Count)
+                        return totalScore;
+                }
+            }
 
-                return totalScore;
+
+            return totalScore;
         }
 
         public Library(int id, int signUpTime, int scannedBooksPerDay, List<Book> booksInLibrary, int daysAvaliableInProblem)

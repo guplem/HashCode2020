@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace OnlineQualificationRound
@@ -16,7 +17,8 @@ namespace OnlineQualificationRound
 
         public int GetScore(int totalDaysAvailable)
         {
-            // TODO
+            Console.WriteLine("    Calculating score... ");
+
             int totalScore = 0;
             int currentSignUpTime = 0;
             Library currentSignUpLibrary = null;
@@ -50,13 +52,16 @@ namespace OnlineQualificationRound
                 {
                     for (int b = 0; b < pair.Key.scannedBooksPerDay; b++)
                     {
-                        Book scanningBook = pair.Value.ElementAt(0);
-                        pair.Value.RemoveAt(0);
-
-                        if (!scannedBooks.Contains(scanningBook))
+                        if (pair.Value.Count > 0)
                         {
-                            totalScore += scanningBook.score;
-                            scannedBooks.Add(scanningBook);
+                            Book scanningBook = pair.Value.ElementAt(0);
+                            pair.Value.RemoveAt(0);
+
+                            if (!scannedBooks.Contains(scanningBook))
+                            {
+                                totalScore += scanningBook.score;
+                                scannedBooks.Add(scanningBook);
+                            }
                         }
                     }
                 }
