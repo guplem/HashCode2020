@@ -6,7 +6,7 @@ namespace OnlineQualificationRound
 {
     public class Library : IComparable<Library>
     {
-        private readonly int id;
+        public readonly int id;
         public readonly int signUpTime;
         public readonly int scannedBooksPerDay;
         public List<Book> books { get; private set; }
@@ -21,8 +21,11 @@ namespace OnlineQualificationRound
                 for (int d = 0; d < daysAvaliableInProblem - signUpTime; d++)
                     for (int b = 0; b < scannedBooksPerDay; b++)
                     {
-                        totalScore += books.ElementAt(bookCounter).score;
-                        bookCounter++;
+                        try
+                        {
+                            totalScore += books.ElementAt(bookCounter).score;
+                            bookCounter++;
+                        } catch (ArgumentOutOfRangeException) { }
                     }
 
                 return totalScore;

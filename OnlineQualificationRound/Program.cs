@@ -19,15 +19,18 @@ namespace OnlineQualificationRound
             int totalBooksNumber = Int32.Parse(fileLines[0].Split(' ')[0]);
             int totalLibrariesNumber = Int32.Parse(fileLines[0].Split(' ')[1]);
             
-            int totalDaysAvaliable = Int32.Parse(fileLines[0].Split(' ')[2]);
+            int totalDaysAvailable = Int32.Parse(fileLines[0].Split(' ')[2]);
             Book[] allBooks = GetBookssFromStringLine(fileLines[1], totalBooksNumber);
-            Library[] allLibraries = GetLibrariesFromLines(fileLines.Skip(2).ToArray(), allBooks, totalLibrariesNumber, totalDaysAvaliable);
+            Console.WriteLine("Books stored.");
+            Library[] allLibraries = GetLibrariesFromLines(fileLines.Skip(2).ToArray(), allBooks, totalLibrariesNumber, totalDaysAvailable);
+            Console.WriteLine("Libraries stored.");
 
             
-            Solver solver = new Solver();
-            Solution solution =  solver.SolveProblem(totalDaysAvaliable, allBooks, allLibraries);
             
-            SaveSolution(solution, filename, totalDaysAvaliable);
+            Solver solver = new Solver();
+            Solution solution =  solver.SolveProblem(totalDaysAvailable, allBooks, allLibraries.ToList());
+            
+            SaveSolution(solution, filename, totalDaysAvailable);
         }
 
 
@@ -49,15 +52,19 @@ namespace OnlineQualificationRound
             return books;
         }
         
-        private static Library[] GetLibrariesFromLines(string[] linesWithLibrariesInfo, Book[] allBooks, int totalLibrariesNumber, int daysAvaliableInProblem)
+        private static Library[] GetLibrariesFromLines(string[] linesWithLibrariesInfo, Book[] allBooks, int totalLibrariesNumber, int daysAvailableInProblem)
         {
             List<Library> libraries = new List<Library>();
+            int numberOfBooks = -1;
+            int signUpTime = -1;
+            int scannedBooksPerDay = -1;
+            List<Book> booksInLibrary = new List<Book>();
+            
             for (int l = 0; l < linesWithLibrariesInfo.Length; l++)
             {
-                int numberOfBooks = -1;
-                int signUpTime = -1;
-                int scannedBooksPerDay = -1;
-                List<Book> booksInLibrary = new List<Book>();
+
+                if (string.IsNullOrEmpty(linesWithLibrariesInfo[l]))
+                    break;
                 
                 if (l % 2 == 0) { // First line
                     numberOfBooks = Int32.Parse(linesWithLibrariesInfo[l].Split(' ')[0]);
@@ -72,9 +79,15 @@ namespace OnlineQualificationRound
                                 booksInLibrary.Add(book);
                     
                     if (numberOfBooks != booksInLibrary.Count)
-                        throw new Exception("The number of books read was not the same as the number of books informed as being part of the library.");
+                        throw new Exception("The number of books read was not the same as the number of books informed as being part of the library. Read " + booksInLibrary.Count + ", expected " + numberOfBooks);
                     else
-                        libraries.Add(new Library(libraries.Count(), signUpTime, scannedBooksPerDay, booksInLibrary, daysAvaliableInProblem));
+                        libraries.Add(new Library(libraries.Count(), signUpTime, scannedBooksPerDay, booksInLibrary, daysAvailableInProblem));
+                    
+                    //Reset 
+                    numberOfBooks = -1;
+                    signUpTime = -1;
+                    scannedBooksPerDay = -1;
+                    booksInLibrary = new List<Book>();
                 }
             }
             
@@ -86,26 +99,23 @@ namespace OnlineQualificationRound
         
         private static void SaveSolution(Solution solution, string problemName, int totalDaysAvaliable)
         {
+            Console.WriteLine("Saving solution.");
+            
             List<string> lines = new List<string>();
                 
             lines.Add(solution.libraries.Count.ToString());
-
-            foreach (KeyValuePair<Library, List<Book>> library in solution.libraries)
+            
+            foreach (KeyValuePair<Library, List<Book>> keyValuePair in solution.libraries)
             {
-                    
+                lines.Add(keyValuePair.Key.id.ToString() + " " + keyValuePair.Value.Count.ToString());
+                lines.Add(keyValuePair.Value.Aggregate("", (current, pizza) => current + (pizza.id + " ")));
             }
-            
-            
-            
-            
-            
-            
-            
             
             try {
                 System.IO.File.WriteAllLines("Solution to " + problemName +  " - Score " + solution.GetScore(totalDaysAvaliable) + ".txt", lines.ToArray());
             } catch (IOException e) { Console.WriteLine(e);  }
         }
+        
     }
     
     

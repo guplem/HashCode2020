@@ -1,0 +1,5 @@
+C:\Users\guple\Documents\HashCode2020\OnlineQualificationRound\bin\Debug\OnlineQualificationRound.exe
+C:\Users\guple\Documents\HashCode2020\OnlineQualificationRound\bin\Debug\OnlineQualificationRound.pdb
+C:\Users\guple\Documents\HashCode2020\OnlineQualificationRound\obj\Debug\OnlineQualificationRound.csprojAssemblyReference.cache
+C:\Users\guple\Documents\HashCode2020\OnlineQualificationRound\obj\Debug\OnlineQualificationRound.exe
+C:\Users\guple\Documents\HashCode2020\OnlineQualificationRound\obj\Debug\OnlineQualificationRound.pdb
