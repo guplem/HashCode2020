@@ -12,10 +12,22 @@ namespace OnlineQualificationRound
         public List<Book> books { get; private set; }
         
         private readonly int daysAvaliableInProblem;
+        
+        private int _potentialScore = -1;
         public int potentialScore
         {
-            get {             
-                int totalScore = 0;
+            get
+            {
+                if (_potentialScore < 0)
+                    _potentialScore = CalculatePotentialScore();
+
+                return _potentialScore;
+            }
+        }
+
+        private int CalculatePotentialScore()
+        {
+            int totalScore = 0;
                 
                 int bookCounter = 0;
                 for (int d = 0; d < daysAvaliableInProblem - signUpTime; d++)
@@ -29,7 +41,6 @@ namespace OnlineQualificationRound
                     }
 
                 return totalScore;
-            }
         }
 
         public Library(int id, int signUpTime, int scannedBooksPerDay, List<Book> booksInLibrary, int daysAvaliableInProblem)
