@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PracticeRoundSimpleAlgorith
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PracticceRoundGeneticAlgorithm", "PracticceRoundGeneticAlgorithm\PracticceRoundGeneticAlgorithm.csproj", "{0E94EDFD-EBD7-4D7C-9B49-03764CAFA75E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineQualificationRound", "OnlineQualificationRound\OnlineQualificationRound.csproj", "{591E1F48-61BD-429D-81DA-C2A822F64D0D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{0E94EDFD-EBD7-4D7C-9B49-03764CAFA75E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E94EDFD-EBD7-4D7C-9B49-03764CAFA75E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E94EDFD-EBD7-4D7C-9B49-03764CAFA75E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{591E1F48-61BD-429D-81DA-C2A822F64D0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{591E1F48-61BD-429D-81DA-C2A822F64D0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{591E1F48-61BD-429D-81DA-C2A822F64D0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{591E1F48-61BD-429D-81DA-C2A822F64D0D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
