@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace PracticeRound
+namespace PracticceRoundGeneticAlgorithm
 {
     public class Pizza
     {

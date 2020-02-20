@@ -1,0 +1,5 @@
+C:\Users\guple\Documents\HashCode2020\PracticceRoundGeneticAlgorithm\bin\Debug\PracticceRoundGeneticAlgorithm.exe
+C:\Users\guple\Documents\HashCode2020\PracticceRoundGeneticAlgorithm\bin\Debug\PracticceRoundGeneticAlgorithm.pdb
+C:\Users\guple\Documents\HashCode2020\PracticceRoundGeneticAlgorithm\obj\Debug\PracticceRoundGeneticAlgorithm.csprojAssemblyReference.cache
+C:\Users\guple\Documents\HashCode2020\PracticceRoundGeneticAlgorithm\obj\Debug\PracticceRoundGeneticAlgorithm.exe
+C:\Users\guple\Documents\HashCode2020\PracticceRoundGeneticAlgorithm\obj\Debug\PracticceRoundGeneticAlgorithm.pdb

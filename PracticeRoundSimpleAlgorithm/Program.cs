@@ -8,7 +8,7 @@ using System.Security;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace PracticeRound
+namespace PracticeRoundSimpleAlgorithm
 {
     internal class Program
     {

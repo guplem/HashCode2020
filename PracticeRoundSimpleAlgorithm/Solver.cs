@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace PracticeRound
+namespace PracticeRoundSimpleAlgorithm
 {
     public class Solver
     {
