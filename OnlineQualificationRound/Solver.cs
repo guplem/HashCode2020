@@ -11,8 +11,11 @@ namespace OnlineQualificationRound
 
             // Sort libraries sorted in descending order by potential punctuation.
             List<Library> librariesSortedByPriority = new List<Library>();
-            while (librariesSortedByPriority.Count < allLibraries.Count)
+            
+            Console.Write("Remaining libraries to sort: ");
+            while (allLibraries.Count > 0)
             {
+                Console.Write(allLibraries.Count + ", ");
                 Library topLibrary = null;
                 
                 foreach (Library library in allLibraries)

@@ -21,7 +21,7 @@ namespace OnlineQualificationRound
             int currentSignUpTime = 0;
             Library currentSignUpLibrary = null;
             Dictionary<Library, List<Book>> signUpLibraries = new Dictionary<Library, List<Book>>();
-            List<Book> scannedBooks = null;
+            List<Book> scannedBooks = new List<Book>();
 
             for (int i = 0; i < totalDaysAvailable; i++)
             {
@@ -34,8 +34,13 @@ namespace OnlineQualificationRound
 
                 if (currentSignUpLibrary == null)
                 {
-                    currentSignUpLibrary = sortedLibraries.ElementAt(0);
-                    currentSignUpTime = currentSignUpLibrary.signUpTime;
+                    foreach (Library sortLib in sortedLibraries)
+                        if (!signUpLibraries.ContainsKey(sortLib))
+                        {
+                            currentSignUpLibrary = sortLib;
+                            currentSignUpTime = currentSignUpLibrary.signUpTime;
+                            break;
+                        }
                 }
 
                 currentSignUpTime--;
