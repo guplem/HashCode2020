@@ -34,9 +34,7 @@ namespace OnlineQualificationRound
         
         public int CompareTo(Book other)
         {
-            if (ReferenceEquals(this, other)) return 0;
-            if (ReferenceEquals(null, other)) return 1;
-            return score.CompareTo(other.score);
+            return score-other.score;
         }
     }
 }

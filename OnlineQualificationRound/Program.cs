@@ -111,13 +111,15 @@ namespace OnlineQualificationRound
                 lines.Add(keyValuePair.Key.id.ToString() + " " + keyValuePair.Value.Count.ToString());
                 lines.Add(keyValuePair.Value.Aggregate("", (current, pizza) => current + (pizza.id + " ")));
             }
-            
+
+            int score = solution.GetScore();
             try {
-                System.IO.File.WriteAllLines("Solution to " + problemName +  " - Score " + solution.GetScore(totalDaysAvaliable) + ".txt", lines.ToArray());
+                System.IO.File.WriteAllLines("Solution to " + problemName +  " - Score " + score + ".txt", lines.ToArray());
                 Console.WriteLine("Solution saved.\n \n");
             } catch (IOException e) { Console.WriteLine(e);  }
             
-            
+            Console.WriteLine("   -------  Score: " + score + "  -------\n \n");
+
         }
         
     }

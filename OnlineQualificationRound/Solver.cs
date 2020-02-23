@@ -36,9 +36,19 @@ namespace OnlineQualificationRound
             Console.WriteLine("Libraries sorted in descending order by potential punctuation.");
             
             //Build up the solution
-            Solution solution = new Solution();
+            Solution solution = new Solution(totalDaysAvailable);
+            Console.WriteLine("Adding libraries to solution...");
+            int libCount = 1;
+            
             foreach (Library library in librariesSortedByPriority)
-                solution.AddLibrary(library, library.books);
+            {
+                if (libCount%10==0)
+                    Console.WriteLine("    Adding library " + libCount + "/" + librariesSortedByPriority.Count + " ...");
+                
+                solution.AddLibrary(library, library.books, true);
+                libCount++;
+            }
+                
 
             return solution;
         }
