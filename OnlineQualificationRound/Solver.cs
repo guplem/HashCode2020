@@ -1,51 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OnlineQualificationRound
 {
     public class Solver
     {
-        public Solution SolveProblem(int totalDaysAvailable, Book[] allBooks, List<Library> allLibraries)
+        public Solution SolveProblem(int totalDaysAvailable, Book[] allBooks, Library[] allLibraries)
         {
-            Console.WriteLine("Solving problem... ");
+            Utils.WriteLine("Solving problem... ");
 
             // Sort libraries sorted in descending order by potential punctuation.
-            List<Library> librariesSortedByPriority = new List<Library>();
-            
-
-            while (allLibraries.Count > 0)
-            {
-                if (allLibraries.Count%1000==0)
-                    Console.WriteLine("    Remaining libraries to sort: " + allLibraries.Count);
-                
-                Library topLibrary = null;
-                
-                foreach (Library library in allLibraries)
-                {
-                    if (topLibrary == null || library.potentialScore > topLibrary.potentialScore)
-                        topLibrary = library;
-                }
-
-
-                if (topLibrary != null)
-                {
-                    allLibraries.Remove(topLibrary);
-                    librariesSortedByPriority.Add(topLibrary);                    
-                }
-            }
-            Console.WriteLine("Libraries sorted in descending order by potential punctuation.");
+            List<Library> librariesSortedByPotentialScore = allLibraries.OrderByDescending(i => i).ToList();
+            Utils.WriteLine("  Libraries sorted in descending order by potential punctuation.");
             
             //Build up the solution
             Solution solution = new Solution(totalDaysAvailable);
-            Console.WriteLine("Adding libraries to solution...");
+            Utils.WriteLine("Adding libraries to solution...");
             int libCount = 1;
             
-            foreach (Library library in librariesSortedByPriority)
+            foreach (Library library in librariesSortedByPotentialScore)
             {
-                if (libCount%10==0)
-                    Console.WriteLine("    Adding library " + libCount + "/" + librariesSortedByPriority.Count + " ...");
-                
+                if (libCount % 10 == 0)
+                {
+                    Utils.WriteLine("    Adding library " + Utils.GetFormated(libCount) + "/" + Utils.GetFormated(librariesSortedByPotentialScore.Count) + " ... (Remaining days to sign up new libraries: " + Utils.GetFormated(solution.totalDaysAvailable-solution.totalSignUpDays) + ")");
+
+                    Utils.GoBackOneLine();
+                }
+
                 solution.AddLibrary(library, library.books, true);
+
+
+                if (solution.totalDaysAvailable <= solution.totalSignUpDays)
+                    break;
+                
                 libCount++;
             }
                 

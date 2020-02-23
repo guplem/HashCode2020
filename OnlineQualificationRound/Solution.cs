@@ -9,32 +9,40 @@ namespace OnlineQualificationRound
         public readonly Dictionary<Library, List<Book>> libraries = new Dictionary<Library, List<Book>>();
         public readonly List<Library> sortedLibraries = new List<Library>();
         public readonly int totalDaysAvailable;
-
+        public int totalSignUpDays { get; private set; }
+        
         public Solution(int totalDaysAvailable)
         {
             this.totalDaysAvailable = totalDaysAvailable;
         }
 
+        
+
         public void AddLibrary(Library library, List<Book> libraryBooks, bool removePreviouslyScannedBooks)
         {
-            List<Book> booksToScan = new List<Book>(libraryBooks);
+            if (sortedLibraries.Contains(library))
+                return;
+
+            List<Book> booksToScan;
             
             // Remove the book from the list if it has been already been scanned by another library to improve the final score
             if (removePreviouslyScannedBooks)
+                booksToScan = libraryBooks.Except(GetUnsortedScannedBooks()).ToList();
+            else
+                booksToScan = new List<Book>(libraryBooks);
+
+            if (booksToScan.Count > 0)
             {
-                HashSet<Book> scannedBooks = GetUnsortedScannedBooks();
-                foreach (Book book in scannedBooks)
-                    if (booksToScan.Contains(book))
-                        booksToScan.Remove(book);
+                libraries.Add(library, booksToScan);
+                sortedLibraries.Add(library);
+                totalSignUpDays += library.signUpTime;
             }
 
-            libraries.Add(library, booksToScan);
-            sortedLibraries.Add(library);
         }
 
         public int GetScore()
         {
-            Console.WriteLine("    Calculating score... ");
+            Utils.WriteLine("  > Calculating score... ");
 
             int totalScore = 0;
             HashSet<Book> scannedBooks = GetUnsortedScannedBooks();
@@ -46,103 +54,85 @@ namespace OnlineQualificationRound
 
         private HashSet<Book> GetUnsortedScannedBooks()
         {
-            int currentSignUpTime = 0;
+            int currentSignUpTime = -1;
             Library currentSignUpLibrary = null;
-            Dictionary<Library, HashSet<Book>> signUpLibraries = new Dictionary<Library, HashSet<Book>>();
+            Dictionary<Library, Queue<Book>> signUpLibraries = new Dictionary<Library, Queue<Book>>();
             HashSet<Book> scannedBooks = new HashSet<Book>();
 
-            for (int i = 0; i < totalDaysAvailable; i++)
+            int indexOfLastRegisteredLibrary = -1;
+            
+            for (int currentDay = 0; currentDay < totalDaysAvailable; currentDay++)
             {
+                /*if (currentDay % 100 == 0)
+                {
+                    Utils.WriteLine("    Getting the scanned books of the day " + Utils.GetFormated(currentDay) + "/" + Utils.GetFormated(totalDaysAvailable) );
+                    Utils.GoBackOneLine();  
+                }*/
+
+                
                 if (currentSignUpTime <= 0)
                 {
                     if (currentSignUpLibrary != null)
-                        signUpLibraries.Add(currentSignUpLibrary, new HashSet<Book>(libraries[currentSignUpLibrary]));
-                    currentSignUpLibrary = null;
-                }
+                        signUpLibraries.Add(currentSignUpLibrary, new Queue<Book>(libraries[currentSignUpLibrary]));
 
-                if (currentSignUpLibrary == null)
-                {
-                    foreach (Library sortLib in sortedLibraries)
-                        if (!signUpLibraries.ContainsKey(sortLib))
-                        {
-                            currentSignUpLibrary = sortLib;
-                            currentSignUpTime = currentSignUpLibrary.signUpTime;
-                            break;
-                        }
+                    indexOfLastRegisteredLibrary++;
+                    if (indexOfLastRegisteredLibrary < sortedLibraries.Count)
+                    {
+                        currentSignUpLibrary = sortedLibraries.ElementAt(indexOfLastRegisteredLibrary);
+                        currentSignUpTime = currentSignUpLibrary.signUpTime;
+                    }
+                    else
+                    {
+                        currentSignUpLibrary = null;
+                    }
                 }
-                
                 currentSignUpTime--;
+
                 
-                foreach (KeyValuePair<Library, HashSet<Book>> pair in signUpLibraries)
-                    for (int b = 0; b < pair.Key.scannedBooksPerDay; b++)
+                bool anyRemainingBookToScan = false;
+                
+                // Calculating daily books score
+                HashSet<Library> scannedLibraries = new HashSet<Library>();
+                foreach (KeyValuePair<Library, Queue<Book>> pair in signUpLibraries)
+                {
+                    for (int b = 0; b < pair.Key.scannedBooksPerDay || pair.Value.Count < 0; b++)
                     {
                         Book book = pair.Value.FirstOrDefault();
                         if (book != null)
                         {
-                            pair.Value.Remove(book);
-                            scannedBooks.Add(book);
+                            /*countedBookNumber ++;
+                            if (countedBookNumber % 100 == 0)
+                            {
+                                Utils.WriteLine("    Counting book " + Utils.GetFormated(countedBookNumber) + "/" + Utils.GetFormated(totalNumberOfBooks) );
+                                Utils.GoBackOneLine();
+                            }*/
+                            
+                            scannedBooks.Add(pair.Value.Dequeue()); // No need to check if already exists because it is a hash set
                         }
                     }
-                
-                /*
-                foreach (KeyValuePair<Library, List<Book>> pair in signUpLibraries)
-                    for (int b = 0; b < pair.Key.scannedBooksPerDay; b++)
-                    {
-                        Book scanningBook = pair.Value.ElementAt(0);
-                        pair.Value.RemoveAt(0);
 
-                        //if (!scannedBooks.Contains(scanningBook))
-                            scannedBooks.Add(scanningBook);
-                    }
-                 */
+                    if (pair.Value.Count > 0)
+                        anyRemainingBookToScan = true;
+                    else
+                        scannedLibraries.Add(pair.Key);
+                }
+
+                foreach (Library libraryToRemove in scannedLibraries)
+                    signUpLibraries.Remove(libraryToRemove);
+
+                if (!anyRemainingBookToScan)
+                {
+                    if (currentSignUpTime > 0)
+                        currentDay += currentSignUpTime;
+                    currentSignUpTime = 0;
+                }
+                
+                
             }
 
             return scannedBooks;
         }
         
-        /*private List<Book> GetSortedScannedBooks()
-        {
-            int currentSignUpTime = 0;
-            Library currentSignUpLibrary = null;
-            Dictionary<Library, List<Book>> signUpLibraries = new Dictionary<Library, List<Book>>();
-            List<Book> scannedBooks = new List<Book>();
-
-            for (int i = 0; i < totalDaysAvailable; i++)
-            {
-                if (currentSignUpTime <= 0)
-                {
-                    if (currentSignUpLibrary != null)
-                        signUpLibraries.Add(currentSignUpLibrary, new List<Book>(libraries[currentSignUpLibrary]));
-                    currentSignUpLibrary = null;
-                }
-
-                if (currentSignUpLibrary == null)
-                {
-                    foreach (Library sortLib in sortedLibraries)
-                        if (!signUpLibraries.ContainsKey(sortLib))
-                        {
-                            currentSignUpLibrary = sortLib;
-                            currentSignUpTime = currentSignUpLibrary.signUpTime;
-                            break;
-                        }
-                }
-                
-                currentSignUpTime--;
-                
-                foreach (KeyValuePair<Library, List<Book>> pair in signUpLibraries)
-                    for (int b = 0; b < pair.Key.scannedBooksPerDay; b++)
-                    {
-                        Book scanningBook = pair.Value.ElementAt(0);
-                        pair.Value.RemoveAt(0);
-
-                        if (!scannedBooks.Contains(scanningBook))
-                            scannedBooks.Add(scanningBook);
-                    }
-                
-            }
-
-            return scannedBooks;
-        }*/
     }
 }
 

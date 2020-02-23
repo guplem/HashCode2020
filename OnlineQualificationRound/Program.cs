@@ -10,7 +10,7 @@ namespace OnlineQualificationRound
     {
         public static void Main(string[] args)
         {
-            Console.Write("Write the input file's name: ");
+            Utils.Write("Write the input file's name: ");
             string filename = Console.ReadLine();
             string[] fileLines = ReadFileLines(filename);
             
@@ -20,18 +20,18 @@ namespace OnlineQualificationRound
             int totalLibrariesNumber = Int32.Parse(fileLines[0].Split(' ')[1]);
             
             int totalDaysAvailable = Int32.Parse(fileLines[0].Split(' ')[2]);
-            Console.WriteLine("Storing books... ");
+            Utils.WriteLine("Storing books... ");
             Book[] allBooks = GetBookssFromStringLine(fileLines[1], totalBooksNumber);
-            Console.WriteLine("Storing libraries... ");
+            Utils.WriteLine("Storing libraries... ");
             Library[] allLibraries = GetLibrariesFromLines(fileLines.Skip(2).ToArray(), allBooks, totalLibrariesNumber, totalDaysAvailable);
             
 
             
             
             Solver solver = new Solver();
-            Solution solution =  solver.SolveProblem(totalDaysAvailable, allBooks, allLibraries.ToList());
+            Solution solution =  solver.SolveProblem(totalDaysAvailable, allBooks, allLibraries);
             
-            SaveSolution(solution, filename, totalDaysAvailable);
+            SaveSolution(solution, filename);
         }
 
 
@@ -81,6 +81,7 @@ namespace OnlineQualificationRound
                     
                     if (numberOfBooks != booksInLibrary.Count)
                         throw new Exception("The number of books read was not the same as the number of books informed as being part of the library. Read " + booksInLibrary.Count + ", expected " + numberOfBooks);
+                    
                     else
                         libraries.Add(new Library(libraries.Count(), signUpTime, scannedBooksPerDay, booksInLibrary, daysAvailableInProblem));
                     
@@ -98,9 +99,9 @@ namespace OnlineQualificationRound
             return libraries.ToArray();
         }
         
-        private static void SaveSolution(Solution solution, string problemName, int totalDaysAvaliable)
+        private static void SaveSolution(Solution solution, string problemName)
         {
-            Console.WriteLine("Saving solution...");
+            Utils.WriteLine("Saving solution...");
             
             List<string> lines = new List<string>();
                 
@@ -114,11 +115,11 @@ namespace OnlineQualificationRound
 
             int score = solution.GetScore();
             try {
-                System.IO.File.WriteAllLines("Solution to " + problemName +  " - Score " + score + ".txt", lines.ToArray());
-                Console.WriteLine("Solution saved.\n \n");
+                System.IO.File.WriteAllLines("Solution to '" + problemName +  "' - Score " + Utils.GetFormated(score) + ".txt", lines.ToArray());
+                Utils.WriteLine("Solution saved.\n \n");
             } catch (IOException e) { Console.WriteLine(e);  }
             
-            Console.WriteLine("   -------  Score: " + score + "  -------\n \n");
+            Utils.WriteLine("   -------  Score: " + Utils.GetFormated(score) + "  -------\n \n");
 
         }
         
