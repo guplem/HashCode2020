@@ -18,10 +18,10 @@ namespace OnlineQualificationRound
 
         
 
-        public void AddLibrary(Library library, List<Book> libraryBooks, bool removePreviouslyScannedBooks)
+        public bool AddLibrary(Library library, List<Book> libraryBooks, bool removePreviouslyScannedBooks)
         {
-            if (sortedLibraries.Contains(library))
-                return;
+            if (library == null || sortedLibraries.Contains(library))
+                return false;
 
             List<Book> booksToScan;
             
@@ -38,12 +38,14 @@ namespace OnlineQualificationRound
                 totalSignUpDays += library.signUpTime;
             }
 
+            return true;
         }
 
         public int GetScore()
         {
-            Utils.WriteLine("  > Calculating score... ");
-
+            //Utils.WriteLine("  > Calculating score... ");
+            //Utils.GoBackOneLine();
+            
             int totalScore = 0;
             HashSet<Book> scannedBooks = GetUnsortedScannedBooks();
             foreach (Book book in scannedBooks)
