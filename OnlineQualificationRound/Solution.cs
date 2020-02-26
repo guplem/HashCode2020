@@ -6,38 +6,48 @@ namespace OnlineQualificationRound
 {
     public class Solution
     {
-        public readonly Dictionary<Library, List<Book>> libraries = new Dictionary<Library, List<Book>>();
-        public readonly List<Library> sortedLibraries = new List<Library>();
-        public readonly int totalDaysAvailable;
+        public Dictionary<Library, List<Book>> libraries { get; private set; }
+        public List<Library> sortedLibraries { get; private set; }
+        public int totalDaysAvailable { get; private set; }
         public int totalSignUpDays { get; private set; }
+
+        public HashSet<Book> unsortedScannedBooks
+        {
+            get
+            {
+                if (_unsortedScannedBooks == null)
+                    _unsortedScannedBooks = GetUnsortedScannedBooks();
+                return _unsortedScannedBooks;
+            }
+            private set { }
+        }
+
+        private HashSet<Book> _unsortedScannedBooks = null;
         
         public Solution(int totalDaysAvailable)
         {
             this.totalDaysAvailable = totalDaysAvailable;
+            totalSignUpDays = 0;
+            libraries = new Dictionary<Library, List<Book>>();
+            sortedLibraries = new List<Library>();
         }
 
         
 
-        public void AddLibrary(Library library, List<Book> libraryBooks, bool removePreviouslyScannedBooks)
+        public void AddLibrary(Library library, List<Book> libraryBooks)
         {
             if (sortedLibraries.Contains(library))
                 return;
 
-            List<Book> booksToScan;
-            
-            // Remove the book from the list if it has been already been scanned by another library to improve the final score
-            if (removePreviouslyScannedBooks)
-                booksToScan = libraryBooks.Except(GetUnsortedScannedBooks()).ToList();
-            else
-                booksToScan = new List<Book>(libraryBooks);
+            List<Book> booksToScan = new List<Book>(libraryBooks);
 
             if (booksToScan.Count > 0)
             {
                 libraries.Add(library, booksToScan);
                 sortedLibraries.Add(library);
                 totalSignUpDays += library.signUpTime;
+                _unsortedScannedBooks = null;
             }
-
         }
 
         public int GetScore()
@@ -45,7 +55,7 @@ namespace OnlineQualificationRound
             Utils.WriteLine("  > Calculating score... ");
 
             int totalScore = 0;
-            HashSet<Book> scannedBooks = GetUnsortedScannedBooks();
+            HashSet<Book> scannedBooks = unsortedScannedBooks;
             foreach (Book book in scannedBooks)
                 totalScore += book.score;
 

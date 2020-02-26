@@ -34,7 +34,7 @@ namespace OnlineQualificationRound
         
         public int CompareTo(Book other)
         {
-            return score-other.score;
+            return score - other.score;
         }
     }
 }

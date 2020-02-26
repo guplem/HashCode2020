@@ -20,7 +20,6 @@ namespace OnlineQualificationRound
             {
                 if (_potentialScore < 0)
                     _potentialScore = CalculatePotentialScore();
-
                 return _potentialScore;
             }
         }
@@ -51,15 +50,19 @@ namespace OnlineQualificationRound
             this.id = id;
             this.signUpTime = signUpTime;
             this.scannedBooksPerDay = scannedBooksPerDay;
-            this.books = booksInLibrary.ToArray().OrderByDescending(i => i).ToList();
+            UpdateBooksTo(booksInLibrary);
             this.daysAvaliableInProblem = daysAvaliableInProblem;
         }
 
+        public void UpdateBooksTo(List<Book> newBooksList)
+        {
+            books = new List<Book>(newBooksList.ToArray().OrderByDescending(i => i));
+            _potentialScore = -1;
+        }
+        
         public int CompareTo(Library other)
         {
-            if (ReferenceEquals(this, other)) return 0;
-            if (ReferenceEquals(null, other)) return 1;
-            return potentialScore.CompareTo(other.potentialScore);
+            return potentialScore - other.potentialScore;
         }
 
         protected bool Equals(Library other)
