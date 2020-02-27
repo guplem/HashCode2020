@@ -56,13 +56,13 @@ namespace OnlineQualificationRound
                     {
                         do {
                             libToAd = bestSolutionLibraries.Dequeue();
-                        } while (!mutatedSolution.AddLibrary(libToAd, libToAd.books, false));
+                        } while (!mutatedSolution.AddLibrary(libToAd, libToAd.books, true));
                     }
                     else // add from the random sorted libraries
                     {
                         do {
                             libToAd = randomSortedLibraries.Dequeue();
-                        } while (!mutatedSolution.AddLibrary(libToAd, libToAd.books, false));
+                        } while (!mutatedSolution.AddLibrary(libToAd, libToAd.books, true));
                     }
                     
                     if (mutatedSolution.totalSignUpDays >= mutatedSolution.totalDaysAvailable)
